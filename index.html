@@ -2,15 +2,182 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>和 Sam 一起升级大脑 · 情感测试</title>
+  <title>和 Sam 一起升级大脑 · 情感关系自测</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 打开网站时自动跳到测试页 -->
-  <meta http-equiv="refresh" content="0; url=qinggan-test.html" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top, #ffe8dd 0, #fff7f2 40%, #fffdfb 100%);
+      color: #333;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 26px;
+      padding: 32px 24px 40px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 12px;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #b28c6b;
+      margin-bottom: 4px;
+    }
+
+    .title-cn {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #2f2f2f;
+    }
+
+    .title-en {
+      font-size: 14px;
+      color: #a38b76;
+      margin-bottom: 18px;
+    }
+
+    .intro {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 24px;
+    }
+
+    .intro p {
+      margin: 0 0 8px;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #e58c5a;
+    }
+
+    .note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 26px;
+      border-radius: 999px;
+      border: none;
+      background: #222;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.15s;
+    }
+
+    .btn-main span {
+      margin-right: 6px;
+    }
+
+    .btn-main:hover {
+      background: #111;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-main:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    }
+
+    .footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px 18px 32px;
+        border-radius: 20px;
+      }
+      .title-cn {
+        font-size: 20px;
+      }
+      .intro {
+        font-size: 14px;
+      }
+      .note {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <p>正在跳转到情感测试页面……</p>
-  <p>如果没有自动跳转，请点
-    <a href="qinggan-test.html">这里进入测试</a>。
-  </p>
+  <div class="page">
+    <div class="card">
+      <div class="logo">
+        <!-- 确保仓库里有 logo.png，或者把 src 换成你的文件名 -->
+        <img src="logo.png" alt="和 Sam 一起升级大脑 · 标志" />
+      </div>
+
+      <div class="eyebrow">RELATIONSHIP CHECK</div>
+      <div class="title-cn">这段感情里，你正在经历什么？</div>
+      <div class="title-en">和 Sam 一起升级大脑 · 情感关系小测试</div>
+
+      <div class="intro">
+        <p>有时候，不是你不够好，而是这段关系里，你一直在<strong class="highlight">硬扛情绪、压着委屈</strong>。</p>
+        <p>这 50 道题，会帮你看看：你现在扮演的，是哪一种「感情角色」。</p>
+      </div>
+
+      <div class="note">
+        不用急着给感情下结论，<br />
+        先看清自己现在的状态，再决定要不要继续走下去。
+      </div>
+
+      <a class="btn-main" href="qinggan-test.html">
+        <span>开始测试</span> →
+      </a>
+
+      <div class="footer">
+        © 2025 和 Sam 一起升级大脑 · 情感关系自测
+      </div>
+    </div>
+  </div>
 </body>
 </html>
