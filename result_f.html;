@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>结果 F · 把自己藏起来型｜和 Sam 一起升级大脑 · 情感测试</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 12px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f6f2ec;
+      color: #222;
+    }
+    .page { max-width: 780px; margin: 0 auto; }
+    .card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 28px 20px 32px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+    .header { text-align: center; margin-bottom: 20px; }
+    .logo { width: 72px; height: 72px; object-fit: contain; margin-bottom: 8px; }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 6px;
+    }
+    .type-en {
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #c0a27a;
+      margin-bottom: 4px;
+    }
+    .type-title { font-size: 20px; font-weight: 600; margin: 4px 0 6px; }
+    .type-sub { font-size: 13px; color: #777; }
+    .section { margin-top: 20px; }
+    .section h2 { font-size: 16px; margin: 0 0 8px; }
+    .section p {
+      margin: 0 0 10px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .result-cta {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px dashed rgba(0,0,0,0.08);
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #555;
+    }
+    .result-buttons {
+      margin: 18px 0 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .result-buttons a { text-decoration: none; }
+    .btn-main,
+    .btn-ghost {
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      border: 1px solid #f28c3a;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .btn-main { background: #f28c3a; color: #fff; }
+    .btn-main:hover { opacity: 0.9; }
+    .btn-ghost { background: transparent; color: #f28c3a; }
+    .btn-ghost:hover { background: rgba(242,140,58,0.06); }
+    .result-follow { font-size: 12px; color: #888; }
+
+    @media (min-width: 768px) {
+      body { padding: 40px 16px; }
+      .card { padding: 32px 40px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <header class="header">
+        <img src="logo.png" alt="和 Sam 一起升级大脑" class="logo" />
+        <div class="brand">和 Sam 一起升级大脑</div>
+        <div class="type-en">RELATIONSHIP TYPE F</div>
+        <h1 class="type-title">把自己藏起来型</h1>
+        <div class="type-sub">你渴望亲密，却又本能地往后退。</div>
+      </header>
+
+      <section class="section">
+        <h2>你现在在这段感情里是什么角色？</h2>
+        <p>
+          你并不是不想靠近，只是很怕自己一旦表现得太在乎，就会掉进一个失控的深渊。  
+          所以你会控制主动频率、控制自己表达喜欢的程度，甚至控制自己想 Ta 的时间。  
+          你把很多东西藏在心里，用「冷一点、稳一点」来保护自己。
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Ta 到底在不在乎你？</h2>
+        <p>
+          你其实感觉得到对方的在意，只是你更相信「一切都有可能突然变掉」。  
+          于是你会提前为最坏的结果做准备：少投入一点、少期待一点，这样真的出事时就不会太疼。  
+          在 Ta 看来，你可能是「有点神秘、很难读」，但这是你活下来的方式。
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>你是在保护自己，还是在惩罚自己？</h2>
+        <p>
+          你以为自己是在保护心脏，不让它受太大伤。  
+          但长期把自己关在安全距离之外，你也错过了很多真正被理解、被拥抱的机会。  
+          你既害怕被看见，又渴望有人能看见你「伪装底下的那一层」。
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>你该不该退出？</h2>
+        <p>
+          这段关系要不要继续，取决于 Ta 能不能尊重你的节奏。  
+          如果 Ta 只会抱怨你「不够热情、不够投入」，却不愿意了解你为什么这样，那你没必要再消耗自己去解释。  
+          但如果 Ta 愿意给你空间、愿意慢慢靠近，你也可以尝试一点点卸下防备。
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>你们还能走多远？</h2>
+        <p>
+          亲密关系不是要你一下子把心全部掏出来，而是有人愿意和你一起找一个舒服的距离。  
+          你可以从很小的地方开始练习，比如多分享一点真实感受、多承认一点自己的在意。  
+          你不需要完美得毫无弱点，才配拥有一段好的关系。
+        </p>
+        <p>
+          你已经比很多人诚实：至少你知道自己在害怕什么。  
+          接下来，只要每一次多迈出半小步，你和亲密关系的距离就会慢慢缩短。
+        </p>
+      </section>
+
+      <div class="result-cta">
+        <p>
+          如果这些话有戳中你，先别急着给这段关系下结论。<br>
+          真正重要的，是你终于愿意看见自己的感受，而不是一味硬撑。
+        </p>
+
+        <div class="result-buttons">
+          <a href="love-quiz.html" class="btn-main">再测一次，换个心情看看 →</a>
+          <a href="index.html" class="btn-ghost">回到「和 Sam 一起升级大脑」首页</a>
+        </div>
+
+        <p class="result-follow">
+          想慢慢练习更健康的亲密关系，欢迎在小红书搜索
+          <strong>「和 Sam 一起升级大脑」</strong>，我们一起把情感搞明白。
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
