@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>和 Sam 一起升级大脑 · 情感关系小测试</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff7ed; /* 奶油米色，和结果页统一 */
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+      color: #111827;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 32px auto 40px;
+      padding: 24px 18px 40px;
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .header img {
+      width: 60px;
+      margin-bottom: 8px;
+    }
+
+    .title-en {
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: #9ca3af;
+      text-transform: uppercase;
+    }
+
+    .title-cn {
+      margin-top: 6px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .progress {
+      margin: 18px 0 10px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-inner {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fb923c, #f97316);
+      transition: width 0.25s ease-out;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.6;
+      margin: 8px 0 18px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+    }
+
+    .option-btn:hover {
+      background: #fffbeb;
+      border-color: #f97316;
+      transform: translateY(-1px);
+    }
+
+    .foot-tip {
+      margin-top: 22px;
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        margin: 16px 12px 24px;
+        padding: 18px 14px 30px;
+      }
+      .question-text {
+        font-size: 16px;
+      }
+      .option-btn {
+        font-size: 14px;
+        padding: 9px 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="header">
+      <!-- 如果暂时没有 logo.png，可以先把这一行注释掉 -->
+      <img src="logo.png" alt="和 Sam 一起升级大脑" />
+      <div class="title-en">RELATIONSHIP CHECK</div>
+      <div class="title-cn">这段感情里，你正在经历什么？</div>
+    </div>
+
+    <div class="progress">
+      <span id="progressText">第 1 / 50 题</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-inner" id="progressBar"></div>
+    </div>
+
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+
+    <div class="foot-tip">
+      不用急着选「最正确」的答案，<br />
+      请选择「此刻最像你的真实状态」。
+    </div>
+  </div>
+<script>
+  // 8 个类型的得分
+  const scores = {
+    A: 0, // 用力讨好 / 过度付出型
+    B: 0, // 控制 / 掌控型
+    C: 0, // 被慢慢消耗型
+    D: 0, // 关系观察者型
+    E: 0, // 不够被看见型
+    F: 0, // 稳定伙伴型
+    G: 0, // 情感独立型
+    H: 0  // 高质量互相爱型
+  };
+
+  // 50 道题（可以直接用）
+  const questions = [
+    {
+      text: "1. 现在想到这段感情，你第一反应更接近哪一种？",
+      options: [
+        { text: "我好累，但还是想再撑一撑", type: "C" },
+        { text: "我很矛盾，不知道该继续还是放手", type: "D" },
+        { text: "好像一直在付出，却很难被真正看见", type: "E" },
+        { text: "有困惑，但我希望一起调整、好好走下去", type: "F" }
+      ]
+    },
+    {
+      text: "2. 当你觉得自己受伤了，你最常见的反应是？",
+      options: [
+        { text: "先怪自己，是不是我不够好、不够懂事", type: "A" },
+        { text: "会冷下来，控制距离，甚至故意不回消息", type: "B" },
+        { text: "什么都不说，假装没事，心里却很难过", type: "E" },
+        { text: "会找机会好好沟通，把话说清楚", type: "F" }
+      ]
+    },
+    {
+      text: "3. 你在这段关系里的安全感，更依赖哪一种？",
+      options: [
+        { text: "Ta 有没有回应我、在不在乎我", type: "C" },
+        { text: "我能不能掌握节奏，不被对方牵着走", type: "B" },
+        { text: "我有没有被认真对待、被看见被尊重", type: "E" },
+        { text: "我们能不能一起面对问题、一起成长", type: "H" }
+      ]
+    },
+    {
+      text: "4. 如果你和 Ta 发生矛盾，你最常见的模式是？",
+      options: [
+        { text: "先道歉，让气氛快点好起来，再说别的", type: "A" },
+        { text: "一定要把谁对谁错讲清楚，否则过不去", type: "B" },
+        { text: "会躲开，觉得说了也没用，只会更难受", type: "C" },
+        { text: "冷静一点，等双方情绪下来再沟通", type: "F" }
+      ]
+    },
+    {
+      text: "5. 想到“分手”这两个字，你更像是哪种状态？",
+      options: [
+        { text: "嘴上说要走，其实总舍不得真的离开", type: "A" },
+        { text: "一旦确认不合适，就会狠下心离开", type: "G" },
+        { text: "经常在脑海里演练分手的画面，却拖着不行动", type: "C" },
+        { text: "会认真评估，然后做出对双方都更好的选择", type: "H" }
+      ]
+    },
+    {
+      text: "6. 最近一段时间，你们的相处模式最像？",
+      options: [
+        { text: "我追着对方的情绪跑，很怕对方不开心", type: "A" },
+        { text: "很多事都是我说了算，对方配合我", type: "B" },
+        { text: "像室友，各忙各的，但还没到分手那一步", type: "C" },
+        { text: "有自己的生活，也会留时间给彼此", type: "G" }
+      ]
+    },
+    {
+      text: "7. 当 Ta 忽略你发的消息，你脑子里最先出现的是？",
+      options: [
+        { text: "我是不是哪句话说错了，又惹 Ta 不开心", type: "A" },
+        { text: "好，那我也不回，看谁能忍得住", type: "B" },
+        { text: "心里很难受，但会假装“没关系啦”", type: "E" },
+        { text: "Ta 可能在忙，有事我可以直接说清楚", type: "F" }
+      ]
+    },
+    {
+      text: "8. 你在这段关系里，有多常压抑自己的真实需求？",
+      options: [
+        { text: "几乎总是压着，说出来怕被嫌麻烦", type: "C" },
+        { text: "会忍一忍，但关键点还是会讲", type: "F" },
+        { text: "不太压抑，我会清楚表达边界", type: "G" },
+        { text: "很少压抑，我们之间沟通比较顺畅", type: "H" }
+      ]
+    },
+    {
+      text: "9. 当你想见 Ta，但 Ta 说很忙时，你更像哪一种？",
+      options: [
+        { text: "立刻理解，对方说什么我都配合", type: "A" },
+        { text: "嘴上说没事，心里开始记账，下次再说", type: "B" },
+        { text: "会失落很久，开始怀疑自己是不是不重要", type: "E" },
+        { text: "会失望，但能把注意力放回自己的生活", type: "G" }
+      ]
+    },
+    {
+      text: "10. 如果你们很久没有好好聊过心，你会？",
+      options: [
+        { text: "假装没事，怕一开口就吵起来", type: "C" },
+        { text: "借题发挥，一次性把不满都说出来", type: "B" },
+        { text: "委婉提一下，如果对方敷衍就不敢继续说", type: "E" },
+        { text: "主动约个时间，好好聊聊近况和感受", type: "F" }
+      ]
+    },
+    {
+      text: "11. 你对这段感情的“期待值”，更接近哪一种？",
+      options: [
+        { text: "只要对方不离开，我怎么都行", type: "A" },
+        { text: "Ta 要合我的标准，不然就算了", type: "B" },
+        { text: "希望被认真对待，别再装作没看见我的感受", type: "E" },
+        { text: "希望我们都能变得更好，而不是只是谁依赖谁", type: "H" }
+      ]
+    },
+    {
+      text: "12. 如果你们暂时处于冷战中，你最有可能？",
+      options: [
+        { text: "连夜反思自己，先发一大段道歉和解释", type: "A" },
+        { text: "比谁更狠，谁先低头谁就输", type: "B" },
+        { text: "很想和好，但一直在删删写写，发不出去", type: "C" },
+        { text: "等情绪稳定一点，再找一个合适的点和解", type: "F" }
+      ]
+    },
+    {
+      text: "13. 在别人眼中，你在感情里更像哪种角色？",
+      options: [
+        { text: "太会心软、太好说话的那一个", type: "A" },
+        { text: "比较强势、说话很有主见的那一个", type: "B" },
+        { text: "安安静静、什么都自己消化的那一个", type: "D" },
+        { text: "既有界限，也愿意陪伴和付出的那一个", type: "G" }
+      ]
+    },
+    {
+      text: "14. 当 Ta 分享自己的困难时，你通常会？",
+      options: [
+        { text: "第一反应是：我能帮什么？不用考虑自己", type: "A" },
+        { text: "先给建议，告诉 Ta 应该怎么做", type: "B" },
+        { text: "一边很心疼，一边又担心自己是不是添乱", type: "E" },
+        { text: "会陪伴、会倾听，也会诚实说出自己的感受", type: "H" }
+      ]
+    },
+    {
+      text: "15. 你在这段关系里，是否经常觉得“自己好像被消耗”？",
+      options: [
+        { text: "是，感觉自己越来越小，只剩下对方的情绪", type: "C" },
+        { text: "有时会，但我也在反思边界怎么设得更好", type: "D" },
+        { text: "偶尔会，但我们可以讨论和调整节奏", type: "F" },
+        { text: "很少，我更像在一起成长，而不是被吸干", type: "H" }
+      ]
+    },
+    {
+      text: "16. 你更常在哪种时刻怀疑“Ta 到底爱不爱我”？",
+      options: [
+        { text: "Ta 忽冷忽热时，我马上开始乱想", type: "C" },
+        { text: "Ta 做的事没按我期待的来时", type: "B" },
+        { text: "我表达需求被敷衍、被转移话题时", type: "E" },
+        { text: "我更看 Ta 的长期行动，而不是一两次情绪", type: "G" }
+      ]
+    },
+    {
+      text: "17. 你会为了这段关系，牺牲哪些东西？",
+      options: [
+        { text: "时间、睡眠、状态，都可以，Ta 最重要", type: "A" },
+        { text: "可以牺牲一点，但前提是对方也要听我的", type: "B" },
+        { text: "会下意识把自己放到最后，再回头后悔", type: "C" },
+        { text: "会平衡，既珍惜关系，也不会丢掉自己", type: "G" }
+      ]
+    },
+    {
+      text: "18. 当你表达“不开心”时，对方的常见反应是？",
+      options: [
+        { text: "让我别想那么多，说我太敏感", type: "E" },
+        { text: "先解释自己，然后把话题拉回到自己的感受", type: "B" },
+        { text: "会安抚我，但过后又恢复原样", type: "C" },
+        { text: "会听，会问细节，也会一起找解决办法", type: "H" }
+      ]
+    },
+    {
+      text: "19. 你更习惯用哪种方式确认 Ta 的在乎？",
+      options: [
+        { text: "秒回消息、主动找我、哄我", type: "A" },
+        { text: "在关键时刻站在我这边，听我的安排", type: "B" },
+        { text: "愿意花时间了解我的想法和难处", type: "E" },
+        { text: "既有陪伴，也尊重彼此的生活节奏", type: "F" }
+      ]
+    },
+    {
+      text: "20. 当你觉得这段关系“不太对劲”时，你会？",
+      options: [
+        { text: "先把责任往自己身上揽，觉得是自己不够好", type: "A" },
+        { text: "开始控制、试探、翻旧账，想找证据", type: "B" },
+        { text: "心里知道有问题，却迟迟不敢动任何一块", type: "D" },
+        { text: "会认真评估、沟通，如果不合适也能离开", type: "G" }
+      ]
+    },
+    {
+      text: "21. 你觉得 Ta 在你生命中的位置，更像是？",
+      options: [
+        { text: "全部，是我生活的中心", type: "A" },
+        { text: "很重要，但我要有掌控感", type: "B" },
+        { text: "重要，但我也想保留一点自我空间", type: "D" },
+        { text: "是伙伴，我们都在自己的轨道上并行", type: "H" }
+      ]
+    },
+    {
+      text: "22. 当 Ta 需要你时，你通常会？",
+      options: [
+        { text: "不管自己多累，都会马上出现", type: "A" },
+        { text: "会帮，但希望对方记得“我帮过你”", type: "B" },
+        { text: "会帮，但内心隐隐觉得自己被理所当然", type: "C" },
+        { text: "会帮，但也会诚实说出自己的情况和边界", type: "F" }
+      ]
+    },
+    {
+      text: "23. 在这段关系里，你更常对谁失望？",
+      options: [
+        { text: "对自己失望，觉得不够好", type: "A" },
+        { text: "对 Ta 失望，觉得 Ta 不按我想的走", type: "B" },
+        { text: "对你们的互动方式失望，像陷在循环里", type: "C" },
+        { text: "偶尔失望，但更注重怎么一起调整、修复", type: "H" }
+      ]
+    },
+    {
+      text: "24. 你觉得自己在关系里“被看见”的程度是？",
+      options: [
+        { text: "几乎没人真正懂我，只看到我做了什么", type: "E" },
+        { text: "Ta 懂我一部分，但我有很多隐藏的情绪", type: "D" },
+        { text: "慢慢在被看见，我们有过一些真心的对话", type: "F" },
+        { text: "大部分时候是被看见、被理解的", type: "H" }
+      ]
+    },
+    {
+      text: "25. 你更常在哪种情况下怀疑“是不是我太贪心”？",
+      options: [
+        { text: "一想开口再要一点，就觉得自己要求太多", type: "A" },
+        { text: "对方稍微不配合，我就觉得对方不够上心", type: "B" },
+        { text: "想要被看见、被重视时", type: "E" },
+        { text: "其实不会用“贪心”来形容，只是想更坦诚", type: "G" }
+      ]
+    },
+    {
+      text: "26. 如果你离开这段关系，你最担心什么？",
+      options: [
+        { text: "再也遇不到这样愿意陪我、让我依赖的人", type: "C" },
+        { text: "自己会不会更孤单，没有人能随叫随到", type: "A" },
+        { text: "Ta 会不会觉得是我的错，误解我", type: "E" },
+        { text: "会难过，但相信自己可以重新建立健康关系", type: "G" }
+      ]
+    },
+    {
+      text: "27. 你更习惯在什么状态下做重要感情决定？",
+      options: [
+        { text: "情绪上头时，冲动做决定，之后后悔", type: "C" },
+        { text: "气到极致时，直接翻篇，不回头", type: "B" },
+        { text: "想很久、拖很久，迟迟不敢下结论", type: "D" },
+        { text: "情绪过后，结合现实、价值观一起考虑", type: "H" }
+      ]
+    },
+    {
+      text: "28. 在这段关系里，你有没有感觉到被“微妙地控制”？",
+      options: [
+        { text: "经常有，对方会用情绪、冷淡来影响我", type: "C" },
+        { text: "我比较像那个控制对方节奏的人", type: "B" },
+        { text: "有一点，但我总说服自己没那么严重", type: "D" },
+        { text: "基本没有，我会及时说“不舒服”的地方", type: "G" }
+      ]
+    },
+    {
+      text: "29. 当你们关系还不错的时候，你的感受更多是？",
+      options: [
+        { text: "终于松一口气，怕下一秒又出问题", type: "C" },
+        { text: "觉得一切都在我掌控之中，很安心", type: "B" },
+        { text: "有温暖，但总感觉自己有点透明", type: "E" },
+        { text: "踏实，觉得这段关系可以慢慢经营", type: "F" }
+      ]
+    },
+    {
+      text: "30. 你对“好的亲密关系”的理解更像哪一个？",
+      options: [
+        { text: "对方非常需要我、离不开我", type: "A" },
+        { text: "对方听我的，我替他做决定比较安全", type: "B" },
+        { text: "我被看见，也能安心做自己", type: "E" },
+        { text: "彼此独立，又彼此选择、彼此负责", type: "H" }
+      ]
+    },
+    {
+      text: "31. 在这段感情里，你有没有时常觉得“自己像在考试”？",
+      options: [
+        { text: "有，我总在猜对方要什么，怕答错题", type: "A" },
+        { text: "有，但更多是我在给对方打分", type: "B" },
+        { text: "有，感觉自己永远达不到一个“刚刚好”", type: "C" },
+        { text: "不太有，我更关注双方的真实和流动", type: "G" }
+      ]
+    },
+    {
+      text: "32. 如果朋友问你“你开心吗”，你第一反应是？",
+      options: [
+        { text: "愣住，一时答不上来", type: "D" },
+        { text: "我会说“还好吧”，但心里是“其实并不”", type: "C" },
+        { text: "会先解释对方不容易，为对方找理由", type: "A" },
+        { text: "会诚实地说出好与不好，不需要假装完美", type: "H" }
+      ]
+    },
+    {
+      text: "33. 你在关系里的“界限感”更接近哪一种？",
+      options: [
+        { text: "几乎没有界限，只要对方需要我就会出现", type: "A" },
+        { text: "界限很强，有点像在设规则", type: "B" },
+        { text: "知道要有界限，但很难真的执行", type: "E" },
+        { text: "大致清楚自己的底线，并能平静表达", type: "G" }
+      ]
+    },
+    {
+      text: "34. 当你们聊到未来时，最常出现的感觉是？",
+      options: [
+        { text: "不敢想太多，怕希望越大失望越大", type: "C" },
+        { text: "希望一切按我的规划走会更安心", type: "B" },
+        { text: "有期待，但不确定自己在 Ta 规划里的位置", type: "E" },
+        { text: "可以一起讨论、一起调整，感到踏实", type: "F" }
+      ]
+    },
+    {
+      text: "35. 你会不会因为害怕失去，而做出一些“委屈自己的决定”？",
+      options: [
+        { text: "经常会，事后又很心疼自己", type: "A" },
+        { text: "偶尔会，但更多是为了维持表面稳定", type: "C" },
+        { text: "会，但我很少让对方知道我有多委屈", type: "E" },
+        { text: "会权衡，但不会长期委屈自己去换一段关系", type: "G" }
+      ]
+    },
+    {
+      text: "36. 你和 Ta 吵完架后，谁更常主动修复关系？",
+      options: [
+        { text: "几乎都是我先低头、道歉、找话题", type: "A" },
+        { text: "通常是对方来哄我，或者事情就这么过去了", type: "B" },
+        { text: "有时谁都不修，冷着冷着就当没发生", type: "C" },
+        { text: "我们会轮流，谁更清醒谁先迈出那一步", type: "H" }
+      ]
+    },
+    {
+      text: "37. 你更常在什么时候觉得孤独？",
+      options: [
+        { text: "吵架后，对方不理我时", type: "C" },
+        { text: "明明在一起，却聊不进彼此的世界", type: "E" },
+        { text: "表达需求被反驳、被否定时", type: "D" },
+        { text: "有时也会孤独，但我知道那不仅仅是感情的问题", type: "G" }
+      ]
+    },
+    {
+      text: "38. 你觉得这段关系里，谁更“占便宜”？",
+      options: [
+        { text: "Ta，Ta 得到的理解和包容明显更多", type: "C" },
+        { text: "我，我付出很多，但也掌握主动权", type: "B" },
+        { text: "说不上，只是觉得自己常常不被看见", type: "E" },
+        { text: "更像是互相成就，而不是谁占谁便宜", type: "H" }
+      ]
+    },
+    {
+      text: "39. 你有没有被对方说过类似“你太敏感了”“你想太多了”？",
+      options: [
+        { text: "常常被这样说，久了我也开始怀疑自己", type: "C" },
+        { text: "偶尔，一般是我指出问题的时候", type: "E" },
+        { text: "基本不会，我会选择愿意和情绪对话的人", type: "G" },
+        { text: "有时会，但我们会继续聊下去，而不是把话堵死", type: "F" }
+      ]
+    },
+    {
+      text: "40. 如果用一句话形容你现在的状态，你更接近哪句？",
+      options: [
+        { text: "很累，但停不下来", type: "C" },
+        { text: "不甘心，又舍不得", type: "A" },
+        { text: "有点麻木，像旁观自己的人生", type: "D" },
+        { text: "有困惑，但也在慢慢学着照顾自己", type: "G" }
+      ]
+    },
+    {
+      text: "41. 当你想到“真正健康的关系”时，心里会？",
+      options: [
+        { text: "有点羡慕，觉得那离我很远", type: "C" },
+        { text: "觉得那样反而会失去掌控感", type: "B" },
+        { text: "既向往又害怕，怕自己配不上", type: "A" },
+        { text: "相信自己有机会到那里，也愿意调整自己", type: "H" }
+      ]
+    },
+    {
+      text: "42. 你有多愿意为了一段更好的关系，先从自己开始调整？",
+      options: [
+        { text: "我更习惯先改自己，哪怕对方不改变", type: "A" },
+        { text: "会，但前提是对方也要听我的想法", type: "B" },
+        { text: "想，但常常卡在“不知道怎么改”", type: "D" },
+        { text: "愿意，也愿意学习更健康的相处方式", type: "H" }
+      ]
+    },
+    {
+      text: "43. 如果有人对你说“你值得更好的爱”，你第一反应是？",
+      options: [
+        { text: "嘴上说“哈哈谢谢”，心里是“算了吧”", type: "C" },
+        { text: "我知道，但我现在放不下", type: "A" },
+        { text: "也许吧，但我更在意自己怎么成长", type: "G" },
+        { text: "是的，我也在努力靠近那种爱", type: "H" }
+      ]
+    },
+    {
+      text: "44. 如果未来这段关系发生改变，你最希望自己变成哪种状态？",
+      options: [
+        { text: "哪怕还会心软，至少更懂得照顾自己", type: "C" },
+        { text: "不再用控制、冷战这些方式守住安全感", type: "B" },
+        { text: "就算还会害怕，也能慢慢学会被看见", type: "E" },
+        { text: "更成熟、更清醒，也更温柔地爱人和自己", type: "H" }
+      ]
+    },
+    {
+      text: "45. 想到这份测试，你更希望它带给你的是什么？",
+      options: [
+        { text: "帮我证明我不是“太敏感、太矫情”的那一个", type: "E" },
+        { text: "帮我看清这段关系到底值不值得继续", type: "D" },
+        { text: "帮我找到一点点离开旧模式的勇气", type: "C" },
+        { text: "帮我更了解自己，慢慢走向更好的亲密关系", type: "G" }
+      ]
+    },
+    {
+      text: "46. 比起“立刻有答案”，你更需要的是？",
+      options: [
+        { text: "有人理解我的混乱和犹豫", type: "E" },
+        { text: "有人直接告诉我该怎么做", type: "B" },
+        { text: "一个可以慢慢整理自己感受的空间", type: "D" },
+        { text: "一点清晰、一点方向感和可以实践的小步骤", type: "H" }
+      ]
+    },
+    {
+      text: "47. 在你心里，感情更像是一种什么东西？",
+      options: [
+        { text: "可以让我有归属感的地方", type: "A" },
+        { text: "需要好好经营、而不是随便对待的合作关系", type: "F" },
+        { text: "会让人受伤，但也让人长大的课题", type: "C" },
+        { text: "两个人一起体验世界的一个安全基地", type: "H" }
+      ]
+    },
+    {
+      text: "48. 你更希望自己在爱情里，最终成为怎样的人？",
+      options: [
+        { text: "不会再因为怕失去而一味委屈自己的人", type: "C" },
+        { text: "能够稳住情绪、看清需求再行动的人", type: "D" },
+        { text: "敢说“我也很重要”的那种人", type: "E" },
+        { text: "既有爱、也有边界、也有方向感的人", type: "G" }
+      ]
+    },
+    {
+      text: "49. 如果可以对现在的自己说一句话，你更想说？",
+      options: [
+        { text: "对不起，这些年我一直在忽略你", type: "A" },
+        { text: "辛苦了，你已经很努力在维持一切了", type: "C" },
+        { text: "没关系，你可以慢一点，被理解也可以晚一点来", type: "E" },
+        { text: "谢谢你愿意诚实面对自己，这已经很了不起", type: "H" }
+      ]
+    },
+    {
+      text: "50. 做完这份测试，你最想带走的是什么？",
+      options: [
+        { text: "一个更清晰的标签，知道自己是哪一型", type: "D" },
+        { text: "确认自己不是“爱错了”，只是还在学习", type: "C" },
+        { text: "一份被理解、被温柔对待的感觉", type: "E" },
+        { text: "一点点方向：接下来可以怎么对待自己、对待感情", type: "H" }
+      ]
+    }
+  ];
+
+  const totalQuestions = questions.length;
+
+  let currentIndex = 0;
+
+  const questionTextEl = document.getElementById("questionText");
+  const optionsContainer = document.getElementById("optionsContainer");
+  const progressTextEl = document.getElementById("progressText");
+  const progressBarEl = document.getElementById("progressBar");
+
+  function renderQuestion() {
+    const q = questions[currentIndex];
+
+    questionTextEl.textContent = q.text;
+
+    const displayIndex = currentIndex + 1;
+    progressTextEl.textContent = `第 ${displayIndex} / ${totalQuestions} 题`;
+
+    const percent = (displayIndex / totalQuestions) * 100;
+    progressBarEl.style.width = `${Math.min(percent, 100)}%`;
+
+    optionsContainer.innerHTML = "";
+    q.options.forEach((opt) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt.text;
+      btn.onclick = () => handleAnswer(opt.type);
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(typeKey) {
+    if (scores[typeKey] !== undefined) {
+      scores[typeKey] += 1;
+    }
+
+    currentIndex++;
+
+    if (currentIndex < questions.length) {
+      renderQuestion();
+    } else {
+      goToResult();
+    }
+  }
+
+  function goToResult() {
+    let bestType = null;
+    let bestScore = -Infinity;
+
+    for (const key in scores) {
+      if (scores[key] > bestScore) {
+        bestScore = scores[key];
+        bestType = key;
+      }
+    }
+
+    const resultMap = {
+      A: "result_a.html",
+      B: "result_b.html",
+      C: "result_c.html",
+      D: "result_d.html",
+      E: "result_e.html",
+      F: "result_f.html",
+      G: "result_g.html",
+      H: "result_h.html"
+    };
+
+    const target = resultMap[bestType] || "result_c.html";
+    window.location.href = target;
+  }
+
+  // 初始化第一题
+  renderQuestion();
+
+  </script>
+</body>
+</html>
