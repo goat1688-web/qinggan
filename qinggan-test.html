@@ -48,6 +48,45 @@
       font-weight: 600;
     }
 
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .btn {
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: #fffbeb;
+      border-color: #f97316;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+    }
+
+    .toolbar-spacer {
+      width: 96px;
+    }
+
+
     .progress {
       margin: 18px 0 10px;
       font-size: 14px;
@@ -135,8 +174,12 @@
       <div class="title-cn">这段感情里，你正在经历什么？</div>
     </div>
 
-    <div class="progress">
-      <span id="progressText">第 1 / 50 题</span>
+    <div class="toolbar">
+      <button class="btn" id="prevBtn" type="button" disabled>← 返回上一题</button>
+      <div class="progress">
+        <span id="progressText">第 1 / 50 题</span>
+      </div>
+      <span class="toolbar-spacer" aria-hidden="true"></span>
     </div>
     <div class="progress-bar">
       <div class="progress-inner" id="progressBar"></div>
@@ -619,15 +662,25 @@
 
   const totalQuestions = questions.length;
 
+  // 记录每一题选了哪个类型，用于“返回上一题”时撤销计分
+  const answerHistory = new Array(totalQuestions).fill(null);
+
   let currentIndex = 0;
 
   const questionTextEl = document.getElementById("questionText");
   const optionsContainer = document.getElementById("optionsContainer");
   const progressTextEl = document.getElementById("progressText");
   const progressBarEl = document.getElementById("progressBar");
+  const prevBtnEl = document.getElementById("prevBtn");
+
+  function updatePrevBtn() {
+    if (!prevBtnEl) return;
+    prevBtnEl.disabled = currentIndex <= 0;
+  }
 
   function renderQuestion() {
     const q = questions[currentIndex];
+    if (!q) return;
 
     questionTextEl.textContent = q.text;
 
@@ -637,10 +690,13 @@
     const percent = (displayIndex / totalQuestions) * 100;
     progressBarEl.style.width = `${Math.min(percent, 100)}%`;
 
+    updatePrevBtn();
+
     optionsContainer.innerHTML = "";
     q.options.forEach((opt) => {
       const btn = document.createElement("button");
       btn.className = "option-btn";
+      btn.type = "button";
       btn.textContent = opt.text;
       btn.onclick = () => handleAnswer(opt.type);
       optionsContainer.appendChild(btn);
@@ -648,17 +704,30 @@
   }
 
   function handleAnswer(typeKey) {
+    // 如果该题之前答过（回退后重答），先撤销旧分数，避免重复累计
+    const old = answerHistory[currentIndex];
+    if (old && scores[old] !== undefined) {
+      scores[old] -= 1;
+    }
+
     if (scores[typeKey] !== undefined) {
       scores[typeKey] += 1;
     }
+    answerHistory[currentIndex] = typeKey;
 
     currentIndex++;
 
-    if (currentIndex < questions.length) {
+    if (currentIndex < totalQuestions) {
       renderQuestion();
     } else {
       goToResult();
     }
+  }
+
+  function goPrev() {
+    if (currentIndex <= 0) return;
+    currentIndex -= 1;
+    renderQuestion();
   }
 
   function goToResult() {
@@ -685,6 +754,11 @@
 
     const target = resultMap[bestType] || "result_c.html";
     window.location.href = target;
+  }
+
+  if (prevBtnEl) {
+    prevBtnEl.addEventListener("click", goPrev);
+    updatePrevBtn();
   }
 
   // 初始化第一题
